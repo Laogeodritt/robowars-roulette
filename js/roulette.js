@@ -33,8 +33,8 @@ var ORIENT_ANGLE = [
         90
 ];
 
-var QUADRANT_ANGLE_ERROR = 0;
-var ORIENT_ANGLE_ERROR = 0;
+var QUADRANT_ANGLE_ERROR = 45;
+var ORIENT_ANGLE_ERROR = 20;
 
 var COLORS = {
     arenaInner: [0x33, 0x33, 0x33],
@@ -72,9 +72,9 @@ var rouletteAnim = {
     secondaryStart: [null, null],
     mainEnd: [null, null],
     secondaryEnd: [null, null],
-    mainTau: 0.6,
-    secondaryTau: 1,
-    fullSpins: 4,
+    mainTau: 0.4,
+    secondaryTau: 0.6,
+    fullSpins: 3,
     showAfterTaus: 3,
     endAfterTaus: 10
 };
