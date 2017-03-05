@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RoboWars Montreal</title>
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/robowars.css" rel="stylesheet">
+    <link href="css/roulette.css" rel="stylesheet">
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/startswith.js"></script><!-- shim for browsers that don't support String.prototype.startsWith -->
+    <script src="js/mousetrap.min.js"></script>
+    <script src="js/roulette.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#" data-page="frontpage">ROBOWARS 2017</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container theme-showcase" role="main">
+        <div class="row">
+        </div>
+        <div class="flexbox-row row">
+            <section id="arena-container">
+            </section>
+
+            <div class="flexbox-row" id="side-boxes">
+                <aside id="robot1-position" class="position-box">
+                    <h2>一番ロボ</h2>
+                    <h3><span class="position">第一象限に</span><span class="orientation">中心へ</span></h3>
+                    <p><a class="btn btn-lg btn-primary" id="btn-robot1-roll">Spin</a></p>
+                </aside>
+                <aside id="robot2-position" class="position-box">
+                    <h2>二番ロボ</h2>
+                    <h3><span class="position">第三象限に</span><span class="orientation">左巻へ</span></h3>
+                    <p><a class="btn btn-lg btn-danger" id="btn-robot2-roll">Spin</a></p>
+                </aside>
+                <aside class="position-button-box">
+                    <p><a class="btn btn-lg btn-warning" id="btn-clear">Clear</a></p>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer horiz">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <!--h2>RoboWars Montréal</h2-->
+                    <a href="http://ieee.concordia.ca"><img src="img/logo-left-648x144.png" class="logo img-responsive img-footer img-rounded"></a>
+                </div>
+                <div class="col-md-8 hidden-print">
+                    <h2>Sponsors</h2>
+                    <!--a href="http://www.cdsmachines.com" class="sponsor"><img src="img/sponsors/cds-logo.png" class="img-responsive img-footer img-rounded"></a-->
+                    <a href="http://ecaconcordia.ca" class="sponsor"><img src="img/sponsors/eca-300x144.png" class="img-responsive img-footer img-rounded"></a>
+                    <!--a href="http://montreal.ieee.ca" class="sponsor"><img src="img/sponsors/ieeemontreal-300x225.png" class="img-responsive img-footer img-rounded"></a-->
+                    <!--a href="http://www.spikenzielabs.com" class="sponsor"><img src="img/sponsors/spikenzielabs_logo-300x60.png" class="img-responsive img-footer img-rounded"></a-->
+                </div>
+                <div class="col-md-4" id="contact-us">
+                </div>
+            </div>
+            <div class="row"><div class="col-md-12 copyright">Design copyright &copy; 2014&ndash;2017 IEEE Concordia. Application by Marc-Alexandre Chan (2016&ndash;17).</div></div>
+        </div>
+    </div>
+</body>
+</html>

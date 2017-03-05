@@ -1,0 +1,59 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#arena-container {
+    position: relative;
+}
+
+#arena-canvas, #spinner-canvas {
+    padding-top: 30px;
+    max-width: 100%;
+}
+
+#spinner-canvas {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.position-box h2 {
+    font-size: 48px;
+    text-align: center;
+}
+
+.position-box h3 {
+    font-size: 32px;
+    text-align: center;
+}
+
+.position-box h3 span {
+    display: inline-block;
+}
+
+.position-box p, .position-button-box p {
+    text-align: center;
+    text-indent: 0;
+    margin: 32px 0;
+}
+
+.position-box p .btn-lg, .position-button-box p .btn-lg {
+    font-size: 32px;
+}
+
+.footer.horiz h2 {
+    font-size: 16px;
+    display: inline-block;
+}
+
+.footer.horiz .img-footer { max-height: 64px; }
+.footer.horiz a.sponsor .img-footer { max-height: 50px; }
+.footer.horiz:last-child { text-align: right; }
+
+.footer.horiz a.sponsor {
+    display: inline-block;
+    padding: 8px;
+}
