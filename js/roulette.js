@@ -115,7 +115,6 @@ $(document).ready(function() {
     $posContainers.stop(false, true, true).fadeTo(0, 0);
 
     // buttons
-    // TODO: keyboard binds
     $("#btn-robot1-roll").on('click', function() {
         rouletteRoll(1);
     });
@@ -135,6 +134,20 @@ $(document).ready(function() {
             $(audio.taikoReel).animate({volume: 0.0}, BGM_FADE_MS, 'swing', function() { audio.taikoReel.pause() });
         }
     });
+    $('#nav-help').on('click', function(e) {
+        e.preventDefault();
+        alert("\n\n== KEYBOARD SHORTCUTS ==\n\n"
+                + "    1 : Spin Robot #1 roulette\n"
+                + "    2 : Spin Robot #2 roulette\n"
+                + "    Space : Clear roulettes\n"
+                + "    M : Toggle background music");
+    });
+
+    // key binds
+    Mousetrap.bind('1', function() { $('#btn-robot1-roll').click(); });
+    Mousetrap.bind('2', function() { $('#btn-robot2-roll').click(); });
+    Mousetrap.bind('space', function() { $('#btn-clear').click(); });
+    Mousetrap.bind('m', function() { $('#btn-bgm').click(); });
 
     // audio
     audio.spin = new Audio(AUDIO_FILES.spin);
