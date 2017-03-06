@@ -1,7 +1,7 @@
 var CANVAS_SIZE = 2048;
 var ANIMATE_TIME_MS = 600;
 var ANIMATE_FLASH_MS = 600;
-var BGM_FADE_MS = 400;
+var BGM_FADE_MS = 600;
 
 var QUADRANT_LABEL = [
         "一",
@@ -132,8 +132,7 @@ $(document).ready(function() {
             $(audio.taikoReel).animate({volume: 1.0}, BGM_FADE_MS);
         }
         else {
-            audio.taikoReel.pause();
-            $(audio.taikoReel).animate({volume: 0.0}, BGM_FADE_MS);
+            $(audio.taikoReel).animate({volume: 0.0}, BGM_FADE_MS, 'swing', function() { audio.taikoReel.pause() });
         }
     });
 
@@ -184,20 +183,33 @@ function rouletteRoll(robot) {
     audio.spin.play();
 
     hideRouletteText(robot);
-    setTimeout(function() {
+
+    function onEndRoulette() {
         // text
         showRouletteText(robot);
 
-        // audio
+        // audio - lower volume on bgm first
+        if (audio.taikoReel.paused) playRouletteEndAudio();
+        else $(audio.taikoReel).animate({ volume: 0.2 }, BGM_FADE_MS, 'swing', function() {
+            playRouletteEndAudio();
+        })
+    }
+    function fadeInBgm() {
+        $(audio.taikoReel).animate({ volume: 1.0 }, BGM_FADE_MS, 'swing');
+    }
+    function playRouletteEndAudio() {
         if(robot == 1) {
             audio.rouletteStop1.currentTime = 0;
             audio.rouletteStop1.play();
+            if(!audio.taikoReel.paused) $(audio.rouletteStop1).on('ended', fadeInBgm);
         }
         else {
             audio.rouletteStop2.currentTime = 0;
             audio.rouletteStop2.play();
+            if(!audio.taikoReel.paused) $(audio.rouletteStop2).on('ended', fadeInBgm);
         }
-    }, rouletteAnim.getShowAfterTime()*1000);
+    }
+    setTimeout(onEndRoulette, rouletteAnim.getShowAfterTime()*1000);
 }
 
 function rouletteClear() {
