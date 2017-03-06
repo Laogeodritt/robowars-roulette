@@ -1,4 +1,7 @@
 var CANVAS_SIZE = 2048;
+var ANIMATE_TIME_MS = 600;
+var ANIMATE_FLASH_MS = 600;
+var BGM_FADE_MS = 400;
 
 var QUADRANT_LABEL = [
         "一",
@@ -6,6 +9,7 @@ var QUADRANT_LABEL = [
         "三",
         "四"
 ];
+
 var QUADRANT_STRING = [
         "第一象限に", // dai-ichishō gen ni
         "第二象限に", // dai-nishō gen ni
@@ -49,6 +53,20 @@ var COLORS = {
     rivetHighlight: [253, 214, 174] //[240, 173, 78] // 253, 214, 174 ?
 };
 
+var audio = {
+    spin : null,
+    taikoReel: null,
+    rouletteStop1: null,
+    rouletteStop2: null
+};
+
+var AUDIO_FILES = {
+    spin: "./img/274928__theshaggyfreak__cat-toy-spinning-ball.mp3",
+    taikoReel: "./img/taiko-reel.mp3",
+    rouletteStop1: "./img/roulette-stop1.mp3",
+    rouletteStop2: "./img/roulette-stop2.mp3"
+};
+
 var arena = {
     $canvas: null,
     canvas: null,
@@ -72,11 +90,17 @@ var rouletteAnim = {
     secondaryStart: [null, null],
     mainEnd: [null, null],
     secondaryEnd: [null, null],
-    mainTau: 0.4,
-    secondaryTau: 0.6,
+    mainTau: 0.5,
+    secondaryTau: 1,
     fullSpins: 3,
-    showAfterTaus: 3,
-    endAfterTaus: 10
+    showAfterTaus: 5,
+    endAfterTaus: 12,
+    getShowAfterTime: function() {
+        return rouletteAnim.showAfterTaus * Math.max(rouletteAnim.mainTau, rouletteAnim.secondaryTau);
+    },
+    getEndAfterTime: function() {
+        return rouletteAnim.endAfterTaus * Math.max(rouletteAnim.mainTau, rouletteAnim.secondaryTau);
+    }
 };
 
 $(document).ready(function() {
@@ -84,6 +108,14 @@ $(document).ready(function() {
     drawArena();
     rouletteClear();
 
+    // for the size to set itself correctly
+    var $posContainers = $(".position-box > h3");
+    $posContainers.find('.position').text(QUADRANT_STRING[0]);
+    $posContainers.find('.orientation').text(ORIENT_STRING[0]);
+    $posContainers.stop(false, true, true).fadeTo(0, 0);
+
+    // buttons
+    // TODO: keyboard binds
     $("#btn-robot1-roll").on('click', function() {
         rouletteRoll(1);
     });
@@ -93,7 +125,44 @@ $(document).ready(function() {
     $("#btn-clear").on('click', function() {
          rouletteClear();
     });
+    $("#btn-bgm").on('click', function() {
+        if(audio.taikoReel.paused) {
+            audio.taikoReel.volume = 0;
+            audio.taikoReel.play();
+            $(audio.taikoReel).animate({volume: 1.0}, BGM_FADE_MS);
+        }
+        else {
+            audio.taikoReel.pause();
+            $(audio.taikoReel).animate({volume: 0.0}, BGM_FADE_MS);
+        }
+    });
+
+    // audio
+    audio.spin = new Audio(AUDIO_FILES.spin);
+    configureAudio(audio.spin);
+    audio.spin.playbackRate = 2.0;
+
+    audio.taikoReel = new Audio(AUDIO_FILES.taikoReel);
+    configureAudio(audio.taikoReel);
+    audio.taikoReel.loop = true;
+
+    audio.rouletteStop1 = new Audio(AUDIO_FILES.rouletteStop1);
+    configureAudio(audio.rouletteStop1);
+
+    audio.rouletteStop2 = new Audio(AUDIO_FILES.rouletteStop2);
+    configureAudio(audio.rouletteStop2);
 });
+
+function configureAudio(audioObj) {
+    audioObj.autoplay = false;
+    audioObj.volume = 1.0;
+    audioObj.playbackRate = 1.0;
+    audioObj.preload = 'auto';
+    audioObj.loop = false;
+    if(audioObj.preservesPitch) audioObj.preservesPitch = true;
+    else if(audioObj.mozPreservesPitch) audioObj.mozPreservesPitch = true;
+    else if(audioObj.webkitPreservesPitch) audioObj.webkitPreservesPitch = true;
+}
 
 function rouletteRoll(robot) {
     var irobot = (robot == 1) ? 0 : 1;
@@ -111,7 +180,24 @@ function rouletteRoll(robot) {
             + (ORIENT_ANGLE_ERROR*Math.random()) - ORIENT_ANGLE_ERROR/2;
     window.requestAnimationFrame(drawRouletteFrame);
 
-    // TODO: set up time-delayed event to show result
+    audio.spin.currentTime = 0;
+    audio.spin.play();
+
+    hideRouletteText(robot);
+    setTimeout(function() {
+        // text
+        showRouletteText(robot);
+
+        // audio
+        if(robot == 1) {
+            audio.rouletteStop1.currentTime = 0;
+            audio.rouletteStop1.play();
+        }
+        else {
+            audio.rouletteStop2.currentTime = 0;
+            audio.rouletteStop2.play();
+        }
+    }, rouletteAnim.getShowAfterTime()*1000);
 }
 
 function rouletteClear() {
@@ -125,7 +211,31 @@ function rouletteClear() {
         rouletteAnim.secondaryEnd[i] = null;
     }
     restoreBareArena();
-    $(".position-box > h3 > .position, .position-box > h3 > .orientation").empty();
+    $(".position-box > h3").fadeTo(ANIMATE_TIME_MS, 0);
+}
+
+function showRouletteText(robot) {
+    var irobot = (robot == 1) ? 0 : 1;
+    var $posContainer = $('#robot' + robot + '-position');
+    var color = (robot == 1) ? COLORS.arrowFillP1 : COLORS.arrowFillP2;
+
+    function animateFlashOn() {
+        $posContainer.find('h3').css('color', rgb(color));
+        setTimeout(animateFlashOff, ANIMATE_FLASH_MS/2);
+    }
+
+    function animateFlashOff() {
+        $posContainer.find('h3').css('color', 'inherit');
+    }
+
+    $posContainer.find('.position').text(QUADRANT_STRING[currentRobots[irobot].position]);
+    $posContainer.find('.orientation').text(ORIENT_STRING[currentRobots[irobot].orientation]);
+    $posContainer.find('h3').stop(false, true, true).fadeTo(ANIMATE_TIME_MS, 1, animateFlashOn);
+}
+
+function hideRouletteText(robot) {
+    var irobot = (robot == 1) ? 0 : 1;
+    $('#robot' + robot + '-position h3').fadeTo(ANIMATE_TIME_MS, 0);
 }
 
 function drawRouletteFrame() {
@@ -134,8 +244,8 @@ function drawRouletteFrame() {
         (rouletteAnim.tStart[0] != null) ? t - rouletteAnim.tStart[0] : null,
         (rouletteAnim.tStart[1] != null) ? t - rouletteAnim.tStart[1] : null
     ];
-    var endAfter = rouletteAnim.endAfterTaus * Math.max(rouletteAnim.mainTau, rouletteAnim.secondaryTau);
-    var endAllAfter = Math.max(rouletteAnim.tStart[0], rouletteAnim.tStart[1]) + endAfter;
+    var endAfter = rouletteAnim.getEndAfterTime();
+    var endAllAfter = Math.max.apply(null, rouletteAnim.tStart) + endAfter;
 
     restoreBareArena();
     drawRouletteSpinner(1, tRel[0]);
@@ -148,8 +258,7 @@ function drawRouletteSpinner(robot, trel) {
     var i = (robot == 1) ? 0 : 1;
     if (trel == null) return;
 
-    var mainAngle = _expAngle(trel, rouletteAnim.mainTau,
-            rouletteAnim.mainStart[i], rouletteAnim.mainEnd[i]);
+    var mainAngle = _expAngle(trel, rouletteAnim.mainTau, rouletteAnim.mainStart[i], rouletteAnim.mainEnd[i]);
     var secondaryAngle = _expAngle(trel, rouletteAnim.secondaryTau,
             rouletteAnim.secondaryStart[i], rouletteAnim.secondaryEnd[i]);
     drawArrow(robot, mainAngle, secondaryAngle);

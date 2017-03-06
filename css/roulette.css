@@ -28,6 +28,7 @@
 .position-box h3 {
     font-size: 32px;
     text-align: center;
+    transition: color 0.2s ease;
 }
 
 .position-box h3 span {
