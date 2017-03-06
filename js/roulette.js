@@ -11,16 +11,16 @@ var QUADRANT_LABEL = [
 ];
 
 var QUADRANT_STRING = [
-        "第一象限に", // dai-ichishō gen ni
-        "第二象限に", // dai-nishō gen ni
-        "第三象限に", // dai-sanshō gen ni
-        "第四象限に"  // dai-yonshō gen ni
+        "一", // "第一象限に", // dai-ichishō gen ni
+        "二", // "第二象限に", // dai-nishō gen ni
+        "三", // "第三象限に", // dai-sanshō gen ni
+        "四"  // "第四象限に"  // dai-yonshō gen ni
 ];
 var ORIENT_STRING = [
-        "中心へ", // chūshin e
-        "左巻へ", // samaki e
-        "辺へ", // hen e
-        "右巻へ" // migimaki e
+        "Inward", // "中心へ", // chūshin e
+        "CCW", // "左巻へ", // samaki e
+        "Outward", // "辺へ", // hen e
+        "Clockwise" // "右巻へ" // migimaki e
 ];
 
 var QUADRANT_ANGLE = [
